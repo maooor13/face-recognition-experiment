@@ -45,7 +45,7 @@ QUIT_KEYS = ["escape"]
 
 def show_text(win: visual.Window, text: str, wait_keys: list[str] | None = None) -> None:
     """Display centered text; wait for a key press if wait_keys is provided."""
-    stim = visual.TextStim(win, text=text, height=0.06, wrapWidth=1.3, color="white")
+    stim = visual.TextStim(win, text=text, height=0.06, wrapWidth=1.3, color="white", font="Arial", languageStyle="RTL")
     stim.draw()
     win.flip()
     if wait_keys is None:
