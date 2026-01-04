@@ -94,16 +94,7 @@ def load_trials_from_csv(csv_path: str) -> list[dict]:
 
 def pick_practice_examples(all_rows: list[dict]) -> list[dict]:
     """Pick up to 4 practice rows: happy/sad x (ai/non-ai) if possible."""
-    def match(emo: str, src: str) -> list[dict]:
-        return [r for r in all_rows if r.get("emotion") == emo and str(r.get("source", "")).lower() == src]
-
-    practice = []
-    targets = [("happy", "ai"), ("happy", "non-ai"), ("sad", "ai"), ("sad", "non-ai")]
-    for emo, src in targets:
-        pool = match(emo, src)
-        if pool:
-            practice.append(random.choice(pool))
-
+    practice = [r for r in all_rows if str(r.get("source", "")).lower() == "test"]
     # If we couldn't find all combos, just sample up to 4 from everything
     if len(practice) < 4:
         remaining = [r for r in all_rows if r not in practice]
