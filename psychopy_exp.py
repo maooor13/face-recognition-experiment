@@ -45,7 +45,7 @@ QUIT_KEYS = ["escape"]
 
 def show_text(win: visual.Window, text: str, wait_keys: list[str] | None = None) -> None:
     """Display centered text; wait for a key press if wait_keys is provided."""
-    stim = visual.TextStim(win, text=text, height=0.06, wrapWidth=1.3, color="white")
+    stim = visual.TextStim(win, text=text, height=0.06, wrapWidth=1.3, color="white", font="Arial", languageStyle="RTL")
     stim.draw()
     win.flip()
     if wait_keys is None:
@@ -94,16 +94,7 @@ def load_trials_from_csv(csv_path: str) -> list[dict]:
 
 def pick_practice_examples(all_rows: list[dict]) -> list[dict]:
     """Pick up to 4 practice rows: happy/sad x (ai/non-ai) if possible."""
-    def match(emo: str, src: str) -> list[dict]:
-        return [r for r in all_rows if r.get("emotion") == emo and str(r.get("source", "")).lower() == src]
-
-    practice = []
-    targets = [("happy", "ai"), ("happy", "non-ai"), ("sad", "ai"), ("sad", "non-ai")]
-    for emo, src in targets:
-        pool = match(emo, src)
-        if pool:
-            practice.append(random.choice(pool))
-
+    practice = [r for r in all_rows if str(r.get("source", "")).lower() == "test"]
     # If we couldn't find all combos, just sample up to 4 from everything
     if len(practice) < 4:
         remaining = [r for r in all_rows if r not in practice]
@@ -151,6 +142,7 @@ def main() -> None:
 
     # Randomize trials WITHOUT replacement (no image can appear twice)
     trials_rows = all_rows.copy()
+    trials_rows = [row for row in trials_rows if str(row.get("source", "")).lower() != "test"]
     random.shuffle(trials_rows)
 
     # If you want exactly N_TRIALS, truncate after shuffling
@@ -194,12 +186,19 @@ def main() -> None:
     # ----------------------------
     # Instructions
     # ----------------------------
+    # instructions = (
+    #     "You will see faces one by one.\n\n"
+    #     f"Press RIGHT arrow for HAPPY\n"
+    #     f"Press LEFT arrow for SAD\n\n"
+    #     "Respond as quickly and accurately as possible.\n\n"
+    #     "Press SPACE to start."
+    # )
     instructions = (
-        "You will see faces one by one.\n\n"
-        f"Press RIGHT arrow for HAPPY\n"
-        f"Press LEFT arrow for SAD\n\n"
-        "Respond as quickly and accurately as possible.\n\n"
-        "Press SPACE to start."
+        "יופיעו על המסך פרצופים בזה אחר זה.\n\n"
+        "לחץ על החיץ הימני במקלדת כאשר מופיע פרצוף שמח\n"
+        "לחץ על החיץ השמאלי במקלדת כאשר מופיע פרצוף עצוב\n\n"
+        "יש לענות כמה שיותר מהר ומדויק, עד כמה שניתן.\n\n"
+        "יש ללחוץ על מקש הרווח כדי להתחיל."
     )
     show_text(win, instructions, wait_keys=["space"])
 
@@ -208,7 +207,7 @@ def main() -> None:
 
     # Show 4 example images (1 second each) so participants understand the flow
     if practice_rows:
-        show_text(win, "Examples (no responses recorded).\nPress SPACE to continue.", wait_keys=["space"])
+        show_text(win, "ניסיון לדוגמה (התגובות לא ישמרו).\nיש ללחוץ על מקש הרווח כדי להמשיך.", wait_keys=["space"])
         for pr in practice_rows:
             fname = str(pr.get("filename", ""))
             img_path = os.path.join(IMAGE_DIR, fname)
@@ -221,7 +220,7 @@ def main() -> None:
             win.flip()
             core.wait(0.3)
 
-    show_text(win, "Experiment starts now.\nPress SPACE.", wait_keys=["space"])
+    show_text(win, "הניסוי יתחיל עכשיו.\nיש ללחוץ על מקש הרווח.", wait_keys=["space"])
 
     # ----------------------------
     # Trial loop
