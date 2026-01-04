@@ -186,12 +186,19 @@ def main() -> None:
     # ----------------------------
     # Instructions
     # ----------------------------
+    # instructions = (
+    #     "You will see faces one by one.\n\n"
+    #     f"Press RIGHT arrow for HAPPY\n"
+    #     f"Press LEFT arrow for SAD\n\n"
+    #     "Respond as quickly and accurately as possible.\n\n"
+    #     "Press SPACE to start."
+    # )
     instructions = (
-        "You will see faces one by one.\n\n"
-        f"Press RIGHT arrow for HAPPY\n"
-        f"Press LEFT arrow for SAD\n\n"
-        "Respond as quickly and accurately as possible.\n\n"
-        "Press SPACE to start."
+        "יופיעו על המסך פרצופים בזה אחר זה.\n\n"
+        "לחץ על החיץ הימני במקלדת כאשר מופיע פרצוף שמח\n"
+        "לחץ על החיץ השמאלי במקלדת כאשר מופיע פרצוף עצוב\n\n"
+        "יש לענות כמה שיותר מהר ומדויק, עד כמה שניתן.\n\n"
+        "יש ללחוץ על מקש הרווח כדי להתחיל."
     )
     show_text(win, instructions, wait_keys=["space"])
 
@@ -200,7 +207,7 @@ def main() -> None:
 
     # Show 4 example images (1 second each) so participants understand the flow
     if practice_rows:
-        show_text(win, "Examples (no responses recorded).\nPress SPACE to continue.", wait_keys=["space"])
+        show_text(win, "ניסיון לדוגמה (התגובות לא ישמרו).\nיש ללחוץ על מקש הרווח כדי להמשיך.", wait_keys=["space"])
         for pr in practice_rows:
             fname = str(pr.get("filename", ""))
             img_path = os.path.join(IMAGE_DIR, fname)
@@ -213,7 +220,7 @@ def main() -> None:
             win.flip()
             core.wait(0.3)
 
-    show_text(win, "Experiment starts now.\nPress SPACE.", wait_keys=["space"])
+    show_text(win, "הניסוי יתחיל עכשיו.\nיש ללחוץ על מקש הרווח.", wait_keys=["space"])
 
     # ----------------------------
     # Trial loop
