@@ -142,6 +142,7 @@ def main() -> None:
 
     # Randomize trials WITHOUT replacement (no image can appear twice)
     trials_rows = all_rows.copy()
+    trials_rows = [row for row in trials_rows if str(row.get("source", "")).lower() != "test"]
     random.shuffle(trials_rows)
 
     # If you want exactly N_TRIALS, truncate after shuffling
